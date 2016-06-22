@@ -94,8 +94,15 @@ namespace PxtlCa.XmlCommentMarkDownGenerator
                     var anchor = el.Attribute("cref").Value.StartsWith("!:#");
                     name = anchor ? "seeAnchor" : "seePage";
                 }
-                var vals = valueExtractorsDict[name](el).ToArray();
-                return string.Format(templates[name], args: vals);
+
+                if (valueExtractorsDict.ContainsKey(name))
+                {
+                    var vals = valueExtractorsDict[name](el).ToArray();
+                    return string.Format(templates[name], args: vals);
+                }
+
+                // Whoops?
+                return string.Empty;
             }
 
             if (node.NodeType == XmlNodeType.Text)
